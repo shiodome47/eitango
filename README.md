@@ -48,13 +48,13 @@ npm run dev
 
 1. `src/words.ts` に行を足す（絵が無い間は、絵文字の仮の絵が出る）
 2. 絵を作る: 文字なし・すき間なしの 3×2（6 枚組）の画像を 1 枚作る。場面は `words.ts` の `prompt`
-3. 切り分ける（Pillow が要る）。名前は、左上から右へ、上の段から下の段へ
+3. 切り分けて、`src/words.ts` に絵の場所を足す（Pillow が要る）。名前は、左上から右へ、上の段から下の段へ
 
    ```bash
-   python3 scripts/cut_sheet.py シート.webp public/img grapple squint drench stagger dismantle plunder
+   scripts/add_sheet.sh シート.webp trudge huddle gnaw perch submerge entangle
    ```
 
-4. `src/words.ts` のその行の最後に、絵の場所（`'/img/grapple.webp'`）を足す
+4. `npm test` と `npm run build` で確かめる
 5. 絵だけを見て、その単語が思い浮かぶかを確かめる（別の単語が先に浮かぶ絵は、場面を変えて作り直す）
 
 ## これから

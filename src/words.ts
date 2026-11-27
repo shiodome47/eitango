@@ -54,8 +54,8 @@ export const WORDS: Word[] = [
   w('plunder', '略奪する', '🏴‍☠️', 'Pirates plundered the merchant ship.', '海賊は商船を略奪した。', '荒らされた商船の船室。ひっくり返った箱やたるの間から、物語の中の海賊たちが、金貨の袋や宝を両腕いっぱいに抱えて、戸口から運び出している（顔は見分けられない）', '/img/plunder.webp'),
   w('meander', '曲がりくねる', '🏞️', 'The river meanders through the valley.', '川は谷を曲がりくねって流れている。', '緑の平野を、大きく S 字に曲がりくねって流れる川を、空から見たところ', '/img/meander.webp'),
   // ── 絵がまだ無いもの ──
-  w('grapple', '取っ組み合う', '🤼', 'The two cubs grappled in the grass.', '2 頭の子グマが草の上で取っ組み合った。', '草の上で、後ろ足で立って組み合い、取っ組み合いをしている 2 頭の子グマ'),
-  w('squint', '目を細める', '😎', 'She squinted in the bright sunlight.', '彼女はまぶしい日差しに目を細めた。', '強い日差しの下、片手をひたいにかざして、まぶしそうに目を細めている人（顔を大きく写す）'),
+  w('grapple', '取っ組み合う', '🤼', 'The two cubs grappled in the grass.', '2 頭の子グマが草の上で取っ組み合った。', '草の上で、後ろ足で立って組み合い、取っ組み合いをしている 2 頭の子グマ', '/img/grapple.webp'),
+  w('squint', '目を細める', '😎', 'She squinted in the bright sunlight.', '彼女はまぶしい日差しに目を細めた。', '強い日差しの下、片手をひたいにかざして、まぶしそうに目を細めている人（顔を大きく写す）', '/img/squint.webp'),
   w('trudge', 'とぼとぼ歩く', '🥾', 'The traveler trudged across the dunes.', '旅人は砂丘をとぼとぼと歩いた。', '砂漠の砂丘を、重い荷物を背負い、うつむいて足を引きずるように歩く旅人。後ろに長い足跡がつづいている'),
   w('huddle', '身を寄せ合う', '🐧', 'The penguins huddled together in the blizzard.', 'ペンギンたちは吹雪の中で身を寄せ合った。', '吹雪の中、すき間なくぎゅっと身を寄せ合っているペンギンの群れ'),
   w('gnaw', 'かじる', '🦫', 'A beaver gnawed at the tree trunk.', 'ビーバーが木の幹をかじっていた。', 'ビーバーが前歯で木の幹をかじっている。幹は細くえぐれて、足もとに削りくずが散らばっている'),
