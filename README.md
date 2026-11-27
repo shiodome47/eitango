@@ -51,14 +51,15 @@ npm run dev
 単語の正本は [`src/words.ts`](src/words.ts) です（覚えたい意味ごとに 1 行。単語・意味・例文・絵にする場面）。
 
 1. `src/words.ts` に行を足す（絵が無い間は、絵文字の仮の絵が出る）
-2. 絵を作る: 文字なし・すき間なしの 3×2（6 枚組）の画像を 1 枚作る。場面は `words.ts` の `prompt`
-3. 切り分けて、`src/words.ts` に絵の場所を足す（Pillow が要る）。名前は、左上から右へ、上の段から下の段へ
+2. `scripts/sheets.tsv` に、シートの番号と、そこに入れる 6 語を書く
+3. 絵を作る: 文字なし・すき間なしの 3×2（6 枚組）の画像を、シートごとに 1 枚。場面は `words.ts` の `prompt`。名前は `sheet-28.png` のように、シート番号を入れる
+4. 画像を [shiodome47/eitango-sheets](https://github.com/shiodome47/eitango-sheets) に入れる（何枚でも）。その写しを手元に取ってきて、まとめて取りこむ（Pillow が要る）
 
    ```bash
-   scripts/add_sheet.sh シート.webp trudge huddle gnaw perch submerge entangle
+   scripts/add_from_sheets.sh ../eitango-sheets
    ```
 
-4. `npm test` と `npm run build` で確かめる
+   切り分けて `public/img` に置き、`src/words.ts` に絵の場所を足すところまで行う。1 枚だけのときは `scripts/add_sheet.sh シート.png 単語 6 つ`
 5. 絵だけを見て、その単語が思い浮かぶかを確かめる（別の単語が先に浮かぶ絵は、場面を変えて作り直す）
 
 ## これから

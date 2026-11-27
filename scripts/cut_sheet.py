@@ -11,6 +11,10 @@ from pathlib import Path
 from PIL import Image
 
 
+# 1 語 1 枚の絵の、いちばん長い辺の上限
+MAX = 768
+
+
 def seam(gray, at, size, vertical, reach=12):
     """等分の位置 at のまわりで、継ぎ目らしい線を探す"""
     px = gray.load()
@@ -44,6 +48,8 @@ def main():
         r, c = divmod(n, cols)
         box = (xs[c] + (inset if c else 0), ys[r] + (inset if r else 0), xs[c + 1] - (inset if c < cols - 1 else 0), ys[r + 1] - (inset if r < rows - 1 else 0))
         tile = im.crop(box)
+        if max(tile.size) > MAX:  # 大きすぎる絵は縮める（アプリが重くならないように）
+            tile.thumbnail((MAX, MAX), Image.LANCZOS)
         tile.save(out / f'{name}.webp', quality=84, method=6)
         print(f'{name}.webp {tile.size[0]}x{tile.size[1]}')
 
