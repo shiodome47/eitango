@@ -15,9 +15,6 @@
 
 部品の一覧は [shiodome47/catalog](https://github.com/shiodome47/catalog) の `CATALOG.md`。
 
-**いまだけ:** `@shiodome47/word-gallery` は、まだ npm に公開していないので、`vendor/` に置いた包み（.tgz）から入れています。
-npm に公開したら、`package.json` を `"@shiodome47/word-gallery": "^0.1.1"` に変えて、`vendor/` を消します。
-
 ## 動かす
 
 ```bash
