@@ -56,6 +56,29 @@ body {
   font-size: 0.8125rem;
   font-variant-numeric: tabular-nums;
 }
+.app__install + .app__install {
+  margin-top: 0;
+  border-top: 0;
+  padding-top: 0;
+}
+.app__install p {
+  margin: 0.25rem 0 0.75rem;
+  line-height: 1.7;
+}
+.app__button {
+  min-height: 2.5rem;
+  padding: 0 1rem;
+  border: 1px solid var(--accent);
+  border-radius: 0.5rem;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  cursor: pointer;
+}
+.app__button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
 .app__install {
   margin-top: 3rem;
   padding-top: 1rem;

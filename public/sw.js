@@ -3,7 +3,8 @@
 // - ページ（index.html）: まず通信。だめなら、しまってあるもの
 // - /assets/（ビルドのたびに名前が変わるファイル）: しまってあるものを使う
 // - /img/（絵）とそのほか: しまってあるものをすぐ出し、裏で新しいものに取り替える（作り直した絵は、次に開いたときに変わる）
-// - アプリから「これをしまっておいて」（precache）と言われたものを、裏でしまう。使わなくなった /assets/ は捨てる
+// - アプリから「これをしまっておいて」（precache）と言われたものを、裏でしまう（アプリのファイル・開いたセットの絵・全部の絵）。
+//   使わなくなった /assets/ は捨てる。とちゅうの進み具合と、終わったことを、アプリに知らせる
 const CACHE = 'eitango-v1'
 
 self.addEventListener('install', () => self.skipWaiting())
@@ -70,26 +71,36 @@ self.addEventListener('message', (e) => {
   e.waitUntil(
     (async () => {
       const cache = await caches.open(CACHE)
-      const want = new Set(data.urls.map((u) => new URL(u, self.location.origin).href))
-      // 今のビルドで使っていない /assets/ を捨てる
-      for (const req of await cache.keys()) {
-        if (new URL(req.url).pathname.startsWith('/assets/') && !want.has(req.url)) await cache.delete(req)
-      }
-      // まだしまっていないものを、少しずつ取りに行く（1 つ失敗しても、ほかは続ける）
-      let saved = 0
-      for (const href of want) {
-        if (await cache.match(href, { ignoreVary: true })) continue
-        try {
-          const res = await fetch(href)
-          if (ok(res)) {
-            await cache.put(href, res)
-            saved++
-          }
-        } catch {
-          // 電波が無いときは、次に開いたときにまた試す
+      const want = [...new Set(data.urls.map((u) => new URL(u, self.location.origin).href))]
+      const shell = new Set(want.filter((u) => new URL(u).pathname.startsWith('/assets/')))
+      // 今のビルドで使っていない /assets/ を捨てる（絵は捨てない）
+      if (shell.size > 0) {
+        for (const req of await cache.keys()) {
+          if (new URL(req.url).pathname.startsWith('/assets/') && !shell.has(req.url)) await cache.delete(req)
         }
       }
-      if (e.source) e.source.postMessage({ type: 'precached', saved, total: want.size })
+      // まだしまっていないものを、4 つずつ取りに行く（1 つ失敗しても、ほかは続ける）
+      let done = 0
+      let failed = 0
+      const tell = (type) => e.source && e.source.postMessage({ type, id: data.id, done, total: want.length, failed })
+      const queue = [...want]
+      const worker = async () => {
+        for (let href = queue.shift(); href; href = queue.shift()) {
+          try {
+            if (!(await cache.match(href, { ignoreVary: true }))) {
+              const res = await fetch(href)
+              if (ok(res)) await cache.put(href, res)
+              else failed++
+            }
+          } catch {
+            failed++ // 電波が無いときは、次に開いたときにまた試す
+          }
+          done++
+          if (done % 12 === 0) tell('precache-progress')
+        }
+      }
+      await Promise.all([worker(), worker(), worker(), worker()])
+      tell('precached')
     })(),
   )
 })
