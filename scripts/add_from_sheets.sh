@@ -14,7 +14,13 @@ grep -v '^#' scripts/sheets.tsv | while IFS=$'\t' read -r no words; do
   file=$(ls "$src" 2>/dev/null | grep -iE "^sheet[-_ ]?0*${no}([-_ .(].*)?\.(png|webp|jpe?g)$" | sort | tail -1)
   [ -z "$file" ] && continue
   if [ "$only" = "  " ]; then
-    need=0; for w in $words; do [ -f "public/img/$w.webp" ] || need=1; done
+    # 絵の無い単語があるシートだけ。ただし、作り直しで後ろのシートにも書いてある単語は、後ろのシートで取りこむ
+    need=0
+    for w in $words; do
+      [ -f "public/img/$w.webp" ] && continue
+      last=$(grep -v '^#' scripts/sheets.tsv | awk -F'\t' -v w="$w" '{n=split($2,a," "); for(i=1;i<=n;i++) if(a[i]==w) s=$1} END{print s}')
+      [ "$last" = "$no" ] && need=1
+    done
     [ $need = 0 ] && continue
   fi
   echo "== シート $no ← $file"
