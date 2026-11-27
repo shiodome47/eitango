@@ -1,1 +1,50 @@
-# eitango
+# eitango — 絵で覚える英単語
+
+絵を見て英単語を覚えるアプリです（英検 1 級くらいの単語）。
+
+- 絵・単語・意味のカードが並ぶ。意味（または単語）をかくして、タップで見る
+- 絵を押すと、大きな絵と例文。読み上げ・覚えた印・しぼり込み・まぜる
+- ホーム画面に追加して、アプリのように使える
+
+## 使っている部品
+
+| 部品 | 何に使っているか |
+|---|---|
+| `@shiodome47/word-gallery` | カードの画面（並べる・かくす・くわしい画面・読み上げ・覚えた印） |
+| `@shiodome47/pwa-kit` | ホーム画面に追加する案内・LINE の中のブラウザ対策 |
+
+部品の一覧は [shiodome47/catalog](https://github.com/shiodome47/catalog) の `CATALOG.md`。
+
+**いまだけ:** `@shiodome47/word-gallery` は、まだ npm に公開していないので、`vendor/` に置いた包み（.tgz）から入れています。
+npm に公開したら、`package.json` を `"@shiodome47/word-gallery": "^0.1.0"` に変えて、`vendor/` を消します。
+
+## 動かす
+
+```bash
+npm install
+npm run dev
+```
+
+確かめる: `npm run typecheck`・`npm test`・`npm run build`
+
+## 単語と絵を足す
+
+単語の正本は [`src/words.ts`](src/words.ts) です（覚えたい意味ごとに 1 行。単語・意味・例文・絵にする場面）。
+
+1. `src/words.ts` に行を足す（絵が無い間は、絵文字の仮の絵が出る）
+2. 絵を作る: 文字なし・すき間なしの 3×2（6 枚組）の画像を 1 枚作る。場面は `words.ts` の `prompt`
+3. 切り分ける（Pillow が要る）。名前は、左上から右へ、上の段から下の段へ
+
+   ```bash
+   python3 scripts/cut_sheet.py シート.webp public/img grapple squint drench stagger dismantle plunder
+   ```
+
+4. `src/words.ts` のその行の最後に、絵の場所（`'/img/grapple.webp'`）を足す
+5. 絵だけを見て、その単語が思い浮かぶかを確かめる（別の単語が先に浮かぶ絵は、場面を変えて作り直す）
+
+## これから
+
+- 端末どうしの同期（shiodome-sync）
+- 関所めぐり（`@shiodome47/sekisho`）で、まとまりごとにスタンプ
+- オフラインでも絵が見られるようにする
+- 単語が増えたら、絵を Cloudflare R2 に置く

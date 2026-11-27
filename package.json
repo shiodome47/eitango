@@ -1,0 +1,29 @@
+{
+  "name": "eitango",
+  "private": true,
+  "version": "0.1.0",
+  "description": "絵で覚える英単語（英検 1 級）",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@shiodome47/pwa-kit": "^0.1.0",
+    "@shiodome47/word-gallery": "file:vendor/shiodome47-word-gallery-0.1.0.tgz",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^6.3.0",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.8",
+    "vitest": "^5.1.1"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "絵で覚える英単語",
+  "short_name": "絵たんご",
+  "description": "絵を見て覚える英単語（英検 1 級）",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0d9488",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}
