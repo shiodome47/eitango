@@ -11,7 +11,7 @@ python3 - "$@" <<'PY'
 import re, sys
 p = 'src/words.ts'; s = open(p).read()
 for w in sys.argv[1:]:
-    line = re.search(r"  w\('%s',.*\),\n" % w, s).group(0)
+    line = re.search(r"  [wan]\('%s',.*\),\n" % w, s).group(0)
     if '/img/' not in line:
         s = s.replace(line, line[:-3] + ", '/img/%s.webp'),\n" % w)
 open(p, 'w').write(s)

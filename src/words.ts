@@ -1,7 +1,7 @@
 import type { WordItem } from '@shiodome47/word-gallery'
 
 /**
- * 単語の正本（英検 1 級くらいの動詞）。覚えたい意味ごとに 1 行。
+ * 単語の正本（英検 1 級くらいの単語）。覚えたい意味ごとに 1 行。動詞は `w(…)`、形容詞は `a(…)`、名詞は `n(…)`。
  * `prompt` は、絵にする場面（絵を作るときの指示。絵の説明 `alt` にも使う）。
  * 絵のあるものには `image`（public/img。6 枚組のシートを scripts/cut_sheet.py で切り分ける）。
  * 絵がまだ無いものは、絵文字の仮の絵が出る。
@@ -12,18 +12,30 @@ export interface Word extends WordItem {
   prompt: string
 }
 
-const w = (word: string, meaning: string, placeholder: string, example: string, exampleMeaning: string, prompt: string, image?: string): Word => ({
-  id: word,
-  word,
-  meaning,
-  placeholder,
-  image,
-  example,
-  exampleMeaning,
-  note: '動詞',
-  alt: prompt,
-  prompt,
-})
+type Row = (word: string, meaning: string, placeholder: string, example: string, exampleMeaning: string, prompt: string, image?: string) => Word
+
+/** 1 行を作る道具。`note` は品詞 */
+const row =
+  (note: string): Row =>
+  (word, meaning, placeholder, example, exampleMeaning, prompt, image) => ({
+    id: word,
+    word,
+    meaning,
+    placeholder,
+    image,
+    example,
+    exampleMeaning,
+    note,
+    alt: prompt,
+    prompt,
+  })
+
+/** 動詞 */
+const w = row('動詞')
+/** 形容詞 */
+const a = row('形容詞')
+/** 名詞 */
+const n = row('名詞')
 
 export const WORDS: Word[] = [
   w('scamper', 'ちょこちょこ走る', '🐿️', 'A squirrel scampered along the log.', 'リスが丸太の上をちょこちょこ走った。', '苔のはえた丸太の上を、体を低くして走るリス', '/img/scamper.webp'),
@@ -128,7 +140,6 @@ export const WORDS: Word[] = [
   w('cradle', 'そっと抱きかかえる', '👶', 'She cradled the puppy in her arms.', '彼女は子犬を両腕でそっと抱いた。', '両腕をゆりかごのように丸めて、眠っている小さな子犬を、胸の前でそっと抱きかかえている（顔は写さず、腕と子犬を大きく）', '/img/cradle.webp'),
   w('fray', 'すり切れてほつれる', '🧵', 'The end of the rope had frayed.', 'ロープのはしが、すり切れてほつれていた。', '太いロープのはし。より糸がばらばらにほどけて、ほうきのように広がり、すり切れている（大きく写す）', '/img/fray.webp'),
   w('corrode', '腐食する', '⛓️', 'Sea water corroded the iron chain.', '海水が鉄のくさりを腐食させた。', '港のくいにつながれた古い鉄のくさり。赤茶色にさびて表面がぼろぼろにはがれ、輪の一部がやせ細って穴があいている（大きく写す）', '/img/corrode.webp'),
-  // ── 絵がまだ無いもの（シート 19〜26） ──
   w('mash', 'つぶす', '🥔', 'He mashed the boiled potatoes.', '彼はゆでたジャガイモをつぶした。', 'ボウルの中のゆでたジャガイモを、マッシャーで上から押しつぶしている手元。半分はつぶれ、半分はまだ形が残っている', '/img/mash.webp'),
   w('ladle', 'おたまですくう', '🥄', 'She ladled soup into the bowl.', '彼女はおたまでスープをすくって、うつわに入れた。', '大きななべから、おたまでスープをすくい上げて、うつわに注ごうとしている手元。おたまからスープがしたたっている', '/img/ladle.webp'),
   w('lap', 'ぺろぺろなめて飲む', '🥛', 'The cat lapped up the milk.', '猫はミルクをぺろぺろなめて飲んだ。', '皿のミルクに、舌を出してなめて飲んでいる猫（横から大きく写す。舌がミルクに触れている）', '/img/lap.webp'),
@@ -181,4 +192,79 @@ export const WORDS: Word[] = [
   w('garnish', 'かざりを添える', '🌿', 'She garnished the dish with parsley.', '彼女は料理にパセリを添えた。', 'できあがった料理の皿のまん中に、指先でパセリの葉をそっとのせている手元。皿のふちには、レモンの輪切り'),
   w('unfurl', '広げる', '⛵', 'The sailors unfurled the sail.', '船乗りたちは帆を広げた。', '帆船のマストで、巻いてしばってあった白い帆が、ロープをほどかれて、上からばさっと広がっていく瞬間。半分はまだ巻かれている'),
   w('moor', '船をつなぐ', '⚓', 'He moored the boat to the pier.', '彼はボートを桟橋につないだ。', '桟橋のくいに、ボートから伸びたロープを巻きつけて、結んでいる手元。すぐ横に、岸に寄せたボートのへさき'),
+  // ── シート 28〜31（動詞） ──
+  w('engulf', 'すっぽり飲みこむ', '🔥', 'Flames engulfed the old barn.', '炎が古い納屋を飲みこんだ。', '夜、だれもいない古い木の納屋が、屋根の上まで炎にすっぽり包まれている'),
+  w('protrude', '突き出る', '📌', 'A rusty nail protruded from the board.', 'さびたくぎが板から突き出ていた。', '古い板から、さびたくぎが 1 本、長く突き出ている（横から大きく写す）'),
+  w('puncture', '穴をあける', '🛞', 'A nail punctured the tire.', 'くぎがタイヤに穴をあけた。', '自転車のタイヤに、くぎが深く刺さっている。空気が抜けて、タイヤがぺしゃんこにつぶれている（大きく写す）'),
+  w('rupture', '破裂する', '🚰', 'The water pipe ruptured.', '水道管が破裂した。', '地下室のかべを走る水道管が縦に裂けて、裂け目から水が四方に噴き出している'),
+  w('quiver', '小きざみに震える', '🏹', 'The arrow quivered in the target.', '矢は的に刺さって、小きざみに震えた。', 'わらの的のまん中に刺さった直後の矢。矢の後ろ半分が、震えて何本にもぶれて見える'),
+  w('flail', '手足をばたつかせる', '⛸️', 'He flailed his arms as he slipped on the ice.', '彼は氷の上ですべって、両腕をばたつかせた。', '凍った池の上で足をすべらせ、後ろへ倒れかけて、両腕を大きくばたつかせている人（顔は見分けられない）'),
+  w('grope', '手探りする', '🔦', 'She groped for the light switch in the dark.', '彼女は暗やみの中で、明かりのスイッチを手探りした。', 'ほとんど真っ暗な部屋で、片手を前に伸ばし、指を広げて、かべを手探りしている人。指の少し先に、スイッチの形がうっすら見える'),
+  w('fumble', 'もたもたいじる', '🗝️', 'He fumbled with his keys.', '彼は鍵をもたもたいじった。', '玄関のドアの前で、買い物袋を両腕に抱えたまま、鍵の束をいじって、取り落としそうになっている人の手元'),
+  w('lurch', '急にがくんとゆれる', '🚌', 'The bus lurched forward.', 'バスが急にがくんと前へ出た。', '急に動いたバスの中。立っていた乗客たちが、つり革につかまりながら、いっせいに同じ方向へ大きくよろけている（顔は見分けられない・広告に文字なし）'),
+  w('veer', '急に向きを変える', '🚗', 'The car veered off the road.', '車は急に道をそれた。', '上から見たまっすぐな道。タイヤの跡が途中から急に横へ曲がり、車が道を外れて草地へ入りこんでいる'),
+  w('strut', '胸を張って気取って歩く', '🐓', 'The rooster strutted around the yard.', 'おんどりは庭を気取って歩き回った。', '胸を大きく張り、頭を高く上げ、片足を高く持ち上げて歩いているおんどり（横から）'),
+  w('frolic', 'はしゃいで遊び回る', '🐑', 'Lambs frolicked in the meadow.', '子羊たちが牧草地ではしゃぎ回った。', '春の牧草地で、4 本の足をそろえて宙にとびはねて遊んでいる、何頭もの子羊'),
+  w('scuttle', 'かさかさ走る', '🦀', 'A crab scuttled across the sand.', 'カニが砂の上をかさかさ走った。', '砂浜を横向きに走るカニ。足が速く動いてぼやけ、後ろに点々と足あとが続いている'),
+  w('spew', '大量に吐き出す', '🏭', 'The chimney spewed black smoke.', 'そのえんとつは黒い煙を吐き出した。', '工場の高いえんとつから、黒い煙がもくもくと大量に吐き出されて、空に広がっている（文字なし）'),
+  w('replenish', '補充する', '🥫', 'He replenished the shelves.', '彼はたなに品物を補充した。', '半分空になった店のたなに、段ボール箱から出した缶を 1 つずつ並べて、補充している手元（ラベルは無地・文字なし）'),
+  w('dwindle', 'だんだん減る', '🕯️', 'The candle dwindled to a stub.', 'ろうそくはだんだん短くなって、燃え残りだけになった。', '左から右へ、だんだん短くなっていく 5 本のろうそくが横に並んでいる。左は長く、右はしは、消えかけの小さな燃え残り'),
+  w('wane', '欠けていく', '🌘', 'The moon began to wane.', '月が欠け始めた。', '暗い夜空に、満月から細い月へと、だんだん欠けていく月が横に 5 つ並んでいる（連続写真のように）'),
+  w('shroud', 'おおい隠す', '🌫️', 'Fog shrouded the mountain.', 'きりが山をおおい隠した。', 'こいきりが山をすっぽりおおっていて、頂上の先だけが、わずかにのぞいている'),
+  w('encircle', '取り囲む', '🌳', 'The children encircled the tree.', '子どもたちはその木を取り囲んだ。', '大きな木の太い幹のまわりを、子どもたちが手をつないで、輪になって取り囲んでいる（上から）'),
+  w('pelt', '激しく打ちつける', '🌨️', 'Hail pelted the car.', 'ひょうが車に激しく打ちつけた。', '大きな氷のつぶ（ひょう）が、車の屋根とボンネットに激しく降りつけて、はね返っている。地面にも白いつぶが積もっている'),
+  w('clog', '詰まらせる', '🍂', 'Leaves clogged the drain.', '落ち葉が排水口を詰まらせた。', 'ぬれた落ち葉がぎっしり詰まった、道路の排水口。水が流れず、まわりに大きな水たまりができている'),
+  w('obstruct', 'ふさぐ', '🚧', 'A fallen tree obstructed the road.', 'たおれた木が道をふさいだ。', '山道を、たおれた大きな木が横切って、完全にふさいでいる。手前に、進めずに止まった車'),
+  w('encroach', 'じわじわ入りこむ', '🏜️', 'Sand dunes encroached on the village.', '砂丘が村にじわじわ入りこんだ。', '砂ばくの村に砂丘が押し寄せ、家のかべや戸口が、半分砂にうまっている'),
+  w('shrivel', 'しなびる', '🍇', 'The grapes shriveled in the sun.', 'ブドウは日に当たってしなびた。', 'つるの上で、水分が抜けて、しわしわにしなびたブドウのふさ。となりに、まだみずみずしいふさ'),
+  // ── シート 32〜35（形容詞） ──
+  a('dilapidated', '荒れ果ててぼろぼろの', '🏚️', 'They lived in a dilapidated house.', '彼らは荒れ果てた家に住んでいた。', '屋根に穴があき、窓が割れ、かべの板がはがれ、げんかん先の屋根が傾いた、ぼろぼろの木の家'),
+  a('murky', 'にごった', '🌫️', 'The pond water was murky.', '池の水はにごっていた。', '茶色くにごって、底がまったく見えない池の水。水に入れた手が、手首から先は見えなくなっている'),
+  a('jagged', 'ぎざぎざの', '⛰️', 'The coast was lined with jagged rocks.', 'その海岸には、ぎざぎざの岩が並んでいた。', 'のこぎりの歯のように、するどくとがった岩が並ぶ海岸'),
+  a('gaunt', 'やせこけた', '🎣', 'The old fisherman had a gaunt face.', 'その年老いた漁師は、やせこけた顔をしていた。', 'ほおがこけ、目がくぼんだ、やせた年配の漁師の横顔（港を背に）'),
+  a('flimsy', 'ぺらぺらでこわれやすい', '☂️', 'The flimsy umbrella broke in the wind.', 'ぺらぺらのかさは、風でこわれた。', '強い風で骨が折れて、裏返ってしまった、うすいビニールのかさ'),
+  a('brittle', 'もろい', '🌿', 'The dry twig was brittle.', 'かわいた小枝は、もろかった。', '指で軽く曲げただけで、ぽきっと折れた枯れ枝。折れ口から、細かいかけらが飛んでいる（手元を大きく）'),
+  a('soggy', '水をふくんでぐしょぐしょの', '📦', 'The cardboard box was soggy from the rain.', '段ボール箱は雨でぐしょぐしょだった。', '雨にぬれて色が変わり、ふやけて形がくずれ、底が抜けかけている段ボール箱（文字なし）'),
+  a('parched', 'からからにかわいた', '🏜️', 'The parched earth cracked.', 'からからにかわいた大地が、ひび割れた。', '雨が降らず、一面にあみの目のようにひび割れた大地。枯れた草が 1 本だけ立っている'),
+  a('lush', '青々としげった', '🌴', 'The valley was lush and green.', 'その谷は、青々と草木がしげっていた。', 'シダや大きな葉が、すき間なくしげっている、深い緑の谷'),
+  a('barren', '草木のない', '🪨', 'Nothing grew on the barren land.', 'その不毛の土地には、何も生えなかった。', '草も木も 1 本もない、石と土だけの荒れ地が、地平線まで続いている'),
+  a('opaque', '不透明な', '🚿', 'The bathroom window is opaque.', 'ふろ場の窓は不透明だ。', 'すりガラスの窓。向こうに立つ人のかげが、ぼんやりした形にしか見えない'),
+  a('translucent', '半透明の', '🪼', 'The jellyfish was translucent.', 'そのクラゲは半透明だった。', '暗い水の中で、光を通して、体の中がうっすらすけて見えるクラゲ'),
+  a('lopsided', '片方に傾いた', '🎂', 'The cake was lopsided.', 'そのケーキは片方に傾いていた。', '片側だけが高く、もう片側がしずんで、ななめに傾いたデコレーションケーキ（正面から）'),
+  a('rickety', 'ぐらぐらで今にもこわれそうな', '🌉', 'They crossed a rickety bridge.', '彼らは、ぐらぐらの橋をわたった。', '板がところどころ抜け、ロープがほつれて、ななめにたるんだ、古い木のつり橋'),
+  a('tattered', 'ぼろぼろにさけた', '🏳️', 'A tattered flag flew over the fort.', 'ぼろぼろの旗が、とりでの上にひるがえっていた。', 'はしがずたずたにさけ、あちこちに穴のあいた古い旗が、風になびいている（無地で、もよう・文字なし）'),
+  a('disheveled', 'かみや服が乱れた', '🛌', 'He woke up looking disheveled.', '彼は、かみも服も乱れたまま起きてきた。', '寝起きで、かみが四方にはね、シャツのボタンがかけちがい、えりが片方だけ立っている人'),
+  a('immaculate', 'しみ一つない', '✨', 'Her kitchen was immaculate.', '彼女の台所は、しみ一つなかった。', '何も出ていない、ぴかぴかにみがかれた真っ白な台所。じゃ口と調理台に光がうつっている'),
+  a('pristine', '手つかずのままの', '❄️', 'The snow was pristine.', '雪は、だれもふんでいない真っさらな状態だった。', '足あとが 1 つもない、朝日の当たる真っ白な雪原と、そのおくの森'),
+  a('gnarled', '節くれだってねじれた', '🫒', 'The old olive tree was gnarled.', 'その古いオリーブの木は、節くれだっていた。', '幹がねじれ、こぶだらけになった、古いオリーブの木'),
+  a('burly', 'がっしりした', '🪓', 'A burly lumberjack carried the log.', 'がっしりした木こりが丸太を運んだ。', 'かたはばが広く、うでの太い、がっしりした木こりが、太い丸太をかたにかついでいる（後ろななめから。顔は見分けられない）'),
+  a('ornate', 'こったかざりの', '🏛️', 'The palace had an ornate ceiling.', 'その宮殿には、こったかざりの天井があった。', '金のうずまきもようと彫刻で、すき間なくかざられた宮殿の天井（文字なし）'),
+  a('luminous', '光を放つ', '🍄', 'Luminous mushrooms glowed in the dark.', '光るキノコが暗やみでかがやいた。', '暗い森の地面で、緑色にぼんやり光っているキノコ'),
+  a('secluded', '人里はなれた', '🏕️', 'They stayed in a secluded cabin.', '彼らは人里はなれた小屋にとまった。', '深い森と山にかこまれ、道もほかの家もない場所に、ぽつんと 1 けんだけ立つ小屋（空から）'),
+  a('congested', 'ひどく混雑した', '🚙', 'The highway was congested.', '高速道路はひどく混雑していた。', '全部の車線が車でぎっしりうまり、まったく動いていない高速道路（上から。かんばん・ナンバーに文字なし）'),
+  // ── シート 36〜39（名詞） ──
+  n('debris', 'がれき・破片', '🧱', 'The street was covered with debris after the storm.', 'あらしのあと、通りは破片だらけだった。', 'あらしのあとの通り。折れた枝、屋根のかわら、板切れ、ガラスの破片が、道いっぱいに散らばっている'),
+  n('avalanche', 'なだれ', '🏔️', 'An avalanche roared down the mountain.', 'なだれが、ごう音を立てて山を流れ落ちた。', '雪山のしゃ面を、白い雪けむりを上げて流れ落ちるなだれ'),
+  n('cocoon', 'まゆ', '🐛', 'The caterpillar spun a cocoon.', 'いも虫はまゆを作った。', '小枝についた、白い糸のまゆ（大きく写す）。中に、うっすらかげが見える'),
+  n('crevice', 'せまい割れ目', '🦎', 'A lizard hid in a crevice in the rock.', 'トカゲは岩の割れ目にかくれた。', '大きな岩を縦に走る、細くて深い割れ目。中は暗く、すき間から小さなトカゲが顔を出している'),
+  n('ravine', '深くせまい谷', '🏞️', 'A stream ran through the deep ravine.', '深い谷の底を、小川が流れていた。', '両側が切り立った、深くてせまい谷。底を細い川が流れている（上から）'),
+  n('precipice', '絶壁', '🧗', 'He stood at the edge of the precipice.', '彼は絶壁のふちに立った。', '足もとから垂直に落ちこむ絶壁のふちに立つ人。はるか下に雲と谷（後ろから）'),
+  n('quagmire', 'ぬかるみ', '🚚', 'The truck was stuck in a quagmire.', 'トラックはぬかるみにはまった。', '深いどろのぬかるみに、車輪が半分うまって、動けなくなったトラック（文字なし）'),
+  n('thicket', 'やぶ', '🦌', 'A deer hid in the thicket.', 'シカがやぶにかくれた。', '低い木と枝がからみ合って、中が見通せないやぶ。すき間から、シカの顔がのぞいている'),
+  n('sapling', '苗木', '🌱', 'She planted a sapling.', '彼女は苗木を植えた。', 'ささえの棒にしばられた、ひざの高さほどの細い若木。まわりの土は、ほり返したばかり'),
+  n('soot', 'すす', '🧹', 'The chimney sweep was covered in soot.', 'えんとつそうじの人は、すすだらけだった。', 'えんとつそうじの長いブラシと、それを持つ手ぶくろが、真っ黒なすすにまみれている。まわりに黒いすすがまっている'),
+  n('wreckage', '残がい', '⚓', 'The wreckage of a ship lay on the beach.', '船の残がいが浜に横たわっていた。', '砂浜に打ち上げられた、古い木の船の、骨組みだけになった残がい'),
+  n('relic', '大昔の遺物', '🏺', 'The museum displayed ancient relics.', 'その博物館は、古代の遺物を展示していた。', 'ガラスのケースの中に並ぶ、欠けた土器、さびた剣、古い金貨（説明の札は無地・文字なし）'),
+  n('mural', '壁画', '🎨', 'A mural covered the wall.', '壁画が、かべ一面をおおっていた。', '建物のかべいっぱいにかかれた、森と鳥の大きな絵。はしごに乗った人が、筆でかいている（文字なし）'),
+  n('pedestal', '台座', '🗿', 'The pedestal stood empty.', 'その台座には、何ものっていなかった。', '公園の広場に、像がのっていない、石の四角い台座だけがぽつんと立っている（文字なし）'),
+  n('scaffolding', '足場', '🏗️', 'Scaffolding covered the building.', '足場がその建物をおおっていた。', '建物の正面をおおう、鉄のパイプと板の足場。上で作業する人（幕やかんばんに文字なし）'),
+  n('levee', 'ていぼう', '🌊', 'The levee held back the river.', 'ていぼうが川の水を食い止めた。', '水かさの増した茶色い川と、低い町との間に、長く続く土のていぼう。川の水面のほうが、町の地面より高い'),
+  n('aqueduct', '水道橋', '🌉', 'The Romans built this aqueduct.', 'ローマ人がこの水道橋を造った。', '谷をまたぐ、石のアーチが何段にも重なった、古代の水道橋'),
+  n('quarry', '石切り場', '⛏️', 'Marble was cut from the quarry.', '大理石は、その石切り場から切り出された。', '山を階段のように切り取った石切り場。白い岩のかべと、切り出した四角い石のかたまり'),
+  n('mirage', 'しんきろう', '🏝️', 'They saw a mirage in the desert.', '彼らは砂ばくで、しんきろうを見た。', '砂ばくの地平線に、ゆらゆらゆれる水たまりのような光と、そこに逆さにうつるヤシの木のかげ'),
+  n('stalactite', 'しょうにゅう石', '🦇', 'Stalactites hung from the cave ceiling.', 'しょうにゅう石が、ほら穴の天井からたれ下がっていた。', 'ほら穴の天井から、つららのように何本もたれ下がる石の柱。先から水のしずくが落ちている'),
+  n('geyser', '間けつ泉', '♨️', 'The geyser shot hot water into the air.', '間けつ泉が、熱い湯を空にふき上げた。', '地面の穴から、熱い湯と湯気が、高くふき上がっている'),
+  n('plumage', '鳥の羽毛', '🦚', 'The peacock showed off its plumage.', 'クジャクは羽を広げて見せびらかした。', '尾の羽を、おうぎのように大きく広げたクジャク。青と緑の羽を画面いっぱいに'),
+  n('talon', 'かぎづめ', '🦅', 'The eagle gripped the branch with its talons.', 'ワシはかぎづめで枝をつかんだ。', '枝をつかんでいるワシの足。するどく曲がったつめを、大きく写す'),
+  n('antler', '枝のような角', '🦌', 'The stag had huge antlers.', 'そのおすジカには、大きな角があった。', '大きく枝分かれした角を持つ、おすのシカの頭（角を画面いっぱいに写す）'),
 ]

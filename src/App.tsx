@@ -28,7 +28,7 @@ export function App() {
       <main className="app">
         <header className="app__head">
           <h1>{APP_NAME}</h1>
-          <p>英検 1 級くらいの動詞 {all.total} 語。絵を押すと、大きな絵と例文が見られます。</p>
+          <p>英検 1 級くらいの単語 {all.total} 語。絵を押すと、大きな絵と例文が見られます。</p>
           <div className="app__bar" role="img" aria-label={`覚えた ${all.learned} / ${all.total}`}>
             <span style={{ width: `${all.total ? (all.learned / all.total) * 100 : 0}%` }} />
           </div>
