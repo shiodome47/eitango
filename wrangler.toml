@@ -1,0 +1,11 @@
+# Cloudflare Workers で、ビルドしたアプリ（dist）を配る設定。プログラムは無く、ファイルを配るだけ
+name = "eitango"
+compatibility_date = "2026-11-01"
+
+# 独自ドメイン（初回のデプロイで DNS と証明書が自動で作られる）
+routes = [{ pattern = "eitango.shiodome47.com", custom_domain = true }]
+
+[assets]
+directory = "./dist"
+# 無いページには 404 を返す
+not_found_handling = "404-page"

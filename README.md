@@ -27,6 +27,21 @@ npm run dev
 
 確かめる: `npm run typecheck`・`npm test`・`npm run build`
 
+## 動いている場所（Cloudflare）
+
+**https://eitango.shiodome47.com**（`main` が更新されるたびに、Cloudflare が自動でビルドして配り直す）。設定は `wrangler.toml`・`public/_headers`。
+
+### はじめの 1 回（Cloudflare のダッシュボード）
+
+1. **Workers & Pages** → **作成** → **Workers** → **Git リポジトリをインポート** で `shiodome47/eitango` を選ぶ（まほうのランプ・catalog と同じ）
+2. ビルドの設定
+   - ビルドコマンド: `npm run build`
+   - デプロイコマンド: `npx wrangler deploy`
+   - ルートディレクトリ: `/`
+3. 最初のデプロイが終わると、`eitango.shiodome47.com` が自動でできる
+
+だれでも開けます（検索エンジンには載せない）。自分だけにしたいときは、catalog と同じように Cloudflare Access で決めます。
+
 ## 単語と絵を足す
 
 単語の正本は [`src/words.ts`](src/words.ts) です（覚えたい意味ごとに 1 行。単語・意味・例文・絵にする場面）。

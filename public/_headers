@@ -1,0 +1,15 @@
+# 検索エンジンに載せない・ほかのサイトの中に埋め込ませない
+/*
+  X-Robots-Tag: noindex, nofollow
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+  Strict-Transport-Security: max-age=31536000
+
+# 絵は名前が変わらないので、1 日おぼえておく（作り直した絵は、1 日以内に入れ替わる）
+/img/*
+  Cache-Control: public, max-age=86400
+
+# ビルドのたびに名前が変わるファイルは、ずっとおぼえておく
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
