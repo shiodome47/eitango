@@ -13,3 +13,7 @@
 # ビルドのたびに名前が変わるファイルは、ずっとおぼえておく
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
+
+# サービスワーカーは、いつも新しいものを取りに行く
+/sw.js
+  Cache-Control: no-cache
