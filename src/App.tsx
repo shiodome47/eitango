@@ -28,6 +28,8 @@ export function App() {
   const [keeping, setKeeping] = useState<KeepProgress | null>(null)
 
   const all = progress(WORDS, learned)
+  // まだ覚え終わっていない、いちばん手前のセット（「つづきのセットへ」のボタンで開く）
+  const next = sets.find((set) => progress(set.items, learned).todo > 0)
 
   return (
     <>
@@ -39,14 +41,38 @@ export function App() {
           <div className="app__bar" role="img" aria-label={`覚えた ${all.learned} / ${all.total}`}>
             <span style={{ width: `${all.total ? (all.learned / all.total) * 100 : 0}%` }} />
           </div>
-          <p className="app__count">
-            覚えた {all.learned} / {all.total}
-          </p>
+          <div className="app__row">
+            <p className="app__count">
+              覚えた {all.learned} / {all.total}
+            </p>
+            {next && next.id !== current?.id && (
+              <button type="button" className="app__button app__button--small" onClick={() => setSetId(next.id)}>
+                つづきのセット {next.title} へ
+              </button>
+            )}
+          </div>
         </header>
 
         <WordSetPicker sets={sets} value={current ? current.id : null} onChange={setSetId} learned={learned} />
         {/* key: セットを変えたら、かくし方・しぼり込み・まぜる、をはじめに戻す */}
         <WordGallery key={current ? current.id : 'all'} items={shown} learned={learned} onLearnedChange={setLearned} />
+
+        {/* 見ているセットを全部覚えたら、下にも、つづきへ進むボタンを出す（下まで見終わったところで押せるように） */}
+        {current && next && progress(current.items, learned).todo === 0 && (
+          <div className="app__done">
+            <p>このセットは、全部覚えました。</p>
+            <button
+              type="button"
+              className="app__button"
+              onClick={() => {
+                setSetId(next.id)
+                window.scrollTo({ top: 0 })
+              }}
+            >
+              つづきのセット {next.title} へ
+            </button>
+          </div>
+        )}
 
         {canKeep() && (
           <details className="app__install">
