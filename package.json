@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@shiodome47/pwa-kit": "^0.1.0",
-    "@shiodome47/word-gallery": "file:vendor/shiodome47-word-gallery-0.3.0.tgz",
+    "@shiodome47/word-gallery": "^0.3.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
