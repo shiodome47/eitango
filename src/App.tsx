@@ -55,7 +55,13 @@ export function App() {
 
         <WordSetPicker sets={sets} value={current ? current.id : null} onChange={setSetId} learned={learned} />
         {/* key: セットを変えたら、かくし方・しぼり込み・まぜる、をはじめに戻す */}
-        <WordGallery key={current ? current.id : 'all'} items={shown} learned={learned} onLearnedChange={setLearned} />
+        <WordGallery
+          key={current ? current.id : 'all'}
+          items={shown}
+          learned={learned}
+          onLearnedChange={setLearned}
+          showExampleOnCard={(w) => w.scene === true}
+        />
 
         {/* 見ているセットを全部覚えたら、下にも、つづきへ進むボタンを出す（下まで見終わったところで押せるように） */}
         {current && next && progress(current.items, learned).todo === 0 && (

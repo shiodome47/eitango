@@ -10,7 +10,7 @@ import json, os, re, shutil, sys
 
 J, log = sys.argv[1], open(sys.argv[2]).read()
 words = {}
-for m in re.finditer(r"  ([wan])\('([a-z]+)', (.*)\),\n", open('src/words.ts').read()):
+for m in re.finditer(r"  (?:scene\()?([wan])\('([a-z]+)', (.*?)\)\)?,\n", open('src/words.ts').read()):
     vals = [a or b for a, b in re.findall(r"'((?:[^'\\]|\\.)*)'|\"([^\"]*)\"", m.group(3))]
     words[m.group(2)] = {'pos': {'w': 'verb', 'a': 'adjective', 'n': 'noun'}[m.group(1)], 'example': vals[2]}
 

@@ -8,7 +8,7 @@
 import re,os,shutil,json,sys
 J,log=sys.argv[1],open(sys.argv[2]).read()
 pos={}
-for m in re.finditer(r"  ([wan])\('([a-z]+)'",open('src/words.ts').read()): pos[m.group(2)]={'w':'verb','a':'adjective','n':'noun'}[m.group(1)]
+for m in re.finditer(r"  (?:scene\()?([wan])\('([a-z]+)'",open('src/words.ts').read()): pos[m.group(2)]={'w':'verb','a':'adjective','n':'noun'}[m.group(1)]
 out=J+'/all'; os.makedirs(out)
 key=[]; i=0
 for sheet in sorted([d for d in os.listdir(J) if d.isdigit()],key=int):

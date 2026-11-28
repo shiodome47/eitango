@@ -11,12 +11,13 @@ python3 - "$@" <<'PY'
 import os, re, sys
 p = 'src/words.ts'; s = open(p).read()
 for w in sys.argv[1:]:
-    m = re.search(r"  [wan]\('%s',.*\),\n" % w, s)
+    m = re.search(r"^  (?:scene\()?[wan]\('%s',.*\),\n" % w, s, re.M)
     if not m:  # 単語の一覧から外した語は、切り分けた絵も消す
         os.remove('public/img/%s.webp' % w); continue
     line = m.group(0)
     if '/img/' not in line:
-        s = s.replace(line, line[:-3] + ", '/img/%s.webp'),\n" % w)
+        tail = ')),\n' if line.startswith('  scene(') else '),\n'
+        s = s.replace(line, line[:-len(tail)] + ", '/img/%s.webp'" % w + tail)
 open(p, 'w').write(s)
 print('絵つき', s.count("'/img/"), '語')
 PY

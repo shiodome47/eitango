@@ -17,7 +17,7 @@ grep -v '^#' scripts/sheets.tsv | while IFS=$'\t' read -r no words; do
     # 絵の無い単語があるシートだけ。ただし、作り直しで後ろのシートにも書いてある単語は、後ろのシートで取りこむ
     need=0
     for w in $words; do
-      grep -q "  [wan]('$w'," src/words.ts || continue  # 単語の一覧から外した語は見ない
+      grep -qE "^  (scene\()?[wan]\('$w'," src/words.ts || continue  # 単語の一覧から外した語は見ない
       [ -f "public/img/$w.webp" ] && continue
       last=$(grep -v '^#' scripts/sheets.tsv | awk -F'\t' -v w="$w" '{n=split($2,a," "); for(i=1;i<=n;i++) if(a[i]==w) s=$1} END{print s}')
       [ "$last" = "$no" ] && need=1

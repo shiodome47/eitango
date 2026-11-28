@@ -11,7 +11,7 @@ import re,sys,runpy
 d=runpy.run_path(sys.argv[1]); V,A,Nn=d['V'],d['A'],d['Nn']; k0=int(sys.argv[2]); redo=sys.argv[3:] 
 q=lambda t: '"'+t+'"' if "'" in t else "'"+t+"'"
 p='src/words.ts'; s=open(p).read()
-have=set(re.findall(r"  [wan]\('([a-z]+)'",s)); new=[r[0] for r in V+A+Nn]
+have=set(re.findall(r"  (?:scene\()?[wan]\('([a-z]+)'",s)); new=[r[0] for r in V+A+Nn]
 assert len(set(new))==len(new) and not have&set(new), (have&set(new), [w for w in new if new.count(w)>1])
 for r in V+A+Nn:
     stem=r[0][:-1].lower(); assert stem in r[3].lower(), ('例文に単語が無い', r[0], r[3])
@@ -19,7 +19,7 @@ def rows(f,L): return ''.join('  '+f+'('+', '.join(q(t) for t in r)+'),\n' for r
 i=s.rindex(']'); s=s[:i]+f'  // ── シート {k0}〜（動詞 {len(V)}・形容詞 {len(A)}・名詞 {len(Nn)}） ──\n'+rows('w',V)+rows('a',A)+rows('n',Nn)+s[i:]
 open(p,'w').write(s)
 def old(w):
-    m=re.search(r"  ([wan])\('%s', (.*)\),\n"%w,s); f=m.group(1)
+    m=re.search(r"  (?:scene\()?([wan])\('%s', (.*?)\)\)?,\n"%w,s); f=m.group(1)
     parts=re.findall(r"'((?:[^'\\]|\\.)*)'|\"([^\"]*)\"",m.group(2)); vals=[a or b for a,b in parts]
     return f,(w,vals[0],vals[1],vals[2],vals[3],vals[4])
 groups=[('動詞','w',list(V)),('形容詞','a',list(A)),('名詞','n',list(Nn))]

@@ -124,5 +124,10 @@
 148	satchel hamper corkscrew tureen platter lute
 149	bagpipes metronome gong gills whisker hump
 150	carapace antenna thistle tendril tadpole burr
-# 151 は、会話の場面の次のシートで、reluctant を作り直す（その 6 語は、次の会話の語を足すときに書く）
-151	reluctant
+# 151〜156 は、会話の場面（抽象的な語）。確かめは scripts/blind_kaiwa.py
+151	reluctant reminisce belittle placate mediate dissuade
+152	improvise flaunt splurge compromise concede gloat
+153	dawdle ponder reciprocate ambivalent condescending gullible
+154	frugal complacent resilient obsolete versatile unanimous
+155	tentative verbose inevitable predicament windfall commotion
+156	nuisance ordeal fiasco stalemate hindsight aftermath
