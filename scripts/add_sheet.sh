@@ -8,10 +8,13 @@ blind=""
 if [ "$1" = "--blind" ]; then blind=$2; shift 2; fi
 python3 scripts/cut_sheet.py "$sheet" public/img "$@"
 python3 - "$@" <<'PY'
-import re, sys
+import os, re, sys
 p = 'src/words.ts'; s = open(p).read()
 for w in sys.argv[1:]:
-    line = re.search(r"  [wan]\('%s',.*\),\n" % w, s).group(0)
+    m = re.search(r"  [wan]\('%s',.*\),\n" % w, s)
+    if not m:  # 単語の一覧から外した語は、切り分けた絵も消す
+        os.remove('public/img/%s.webp' % w); continue
+    line = m.group(0)
     if '/img/' not in line:
         s = s.replace(line, line[:-3] + ", '/img/%s.webp'),\n" % w)
 open(p, 'w').write(s)
